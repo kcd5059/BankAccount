@@ -30,8 +30,11 @@ public class Account {
 	}
 	
 	public float withdraw(float withdrawalAmount) {
+		//Check for and prevent overdraft
 		if ((balance - withdrawalAmount) >= 0) {
+			//No overdraft detected, perform withdrawal
 			balance -= withdrawalAmount;
+			//Create new Transaction and add to transactionHistory
 			Transaction transaction = new Transaction(new Date(), TranType.WITHDRAWAL, -withdrawalAmount);
 			transactionHistory.add(transaction);
 			System.out.printf("Withdrew %.2f. ", withdrawalAmount);
@@ -45,7 +48,9 @@ public class Account {
 	}
 	
 	public float deposit(float depositAmount) {
+		//Deposit amount
 		balance += depositAmount;
+		//Create new Transaction and add to transactionHistory
 		Transaction transaction = new Transaction(new Date(), TranType.DEPOSIT, depositAmount);
 		transactionHistory.add(transaction);
 		System.out.printf("Deposited %.2f. ", depositAmount);
@@ -55,13 +60,18 @@ public class Account {
 	
 	public Account transferTo(float transferAmount, Account destinationAccount) {
 		
+		//Check for and prevent overdraft
 		if ((balance - transferAmount) >= 0) {
+			//Withdraw from origin account
 			balance -= transferAmount;
+			//Create new Transaction and add to transactionHistory
 			Transaction transaction = new Transaction(new Date(), TranType.TRANSFER, -transferAmount);
 			System.out.printf("Transferred %.2f. ", transferAmount);
 			System.out.printf("Transaction ID: %d.\n", transaction.getTransactionID());
+			//Set note for transaction
 			transaction.setNote("Transfer to AcctID: " + destinationAccount.accountID);
-			destinationAccount.transferFrom(transferAmount, accountID);
+			//Call transferFrom account to deposit amount into destinationAccount and log transfer
+			destinationAccount.transferFrom(transferAmount, accountID, transaction.getTransactionID());
 			transactionHistory.add(transaction);
 		} else {
 			System.out.println("Insufficient funds!");
@@ -71,12 +81,14 @@ public class Account {
 		return destinationAccount;
 	}
 	
-	private void transferFrom(float transferAmount, int originAccountID) {
+	private void transferFrom(float transferAmount, int originAccountID, int transactionID) {
+		//Deposit amount of transfer
 		balance += transferAmount;
-		
+		//Create new Transaction and add to transactionHistory
 		Transaction transaction = new Transaction(new Date(), TranType.TRANSFER, transferAmount);
-		System.out.printf("Transferred %.2f. ", transferAmount);
-		System.out.printf("Transaction ID: %d.\n", transaction.getTransactionID());
+		//Set transactionID to be the same as Transaction for origin account (for easier tracking)
+		transaction.setTransactionID(transactionID);
+		//Set note for transaction
 		transaction.setNote("Transfer From AcctID: " + originAccountID);
 		transactionHistory.add(transaction);
 	}
@@ -106,17 +118,11 @@ public class Account {
 	}
 	
 	public void printTransactionHistory() {
-		System.out.println("Transaction History for Account: " + accountID);
+		System.out.println("Transaction History for Account: " + accountID + " '" + description + "'");
 		for (Transaction transaction : transactionHistory) {
 			transaction.print();
 		}
 	}
-
-	@Override
-	public String toString() {
-		return "Account [accountID=" + accountID + "]";
-	}
-	
 	
 }
 
