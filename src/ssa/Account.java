@@ -66,7 +66,8 @@ public class Account {
 			balance -= transferAmount;
 			//Create new Transaction and add to transactionHistory
 			Transaction transaction = new Transaction(new Date(), TranType.TRANSFER, -transferAmount);
-			System.out.printf("Transferred %.2f. ", transferAmount);
+			System.out.printf("Transferred %.2f: ", transferAmount);
+			System.out.print(description + " -> " + destinationAccount.getDescription() + ", ");
 			System.out.printf("Transaction ID: %d.\n", transaction.getTransactionID());
 			//Set note for transaction
 			transaction.setNote("Transfer to AcctID: " + destinationAccount.accountID);

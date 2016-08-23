@@ -13,7 +13,7 @@ public class Mainline {
 		System.out.println("--------CHECKING--------");
 		// checking.setAccountID(100); <-- Set to generate random ID which is also final, so this will not run
 		// Set description
-		checking.setDescription("My personal checking account");
+		checking.setDescription("Checking");
 		// Set initial balance
 		checking.setBalance(500f);
 		// Print details of checking account
@@ -37,7 +37,7 @@ public class Mainline {
 		System.out.println("--------SAVINGS--------");
 		// savings.setAccountID(200); <-- will not run
 		// Set description
-		savings.setDescription("My personal savings account");
+		savings.setDescription("Savings");
 		savings.setBalance(1000f);
 		// Print details of savings account
 		System.out.println("Account ID: " + savings.getAccountID() + "\n" + "Description: " + savings.getDescription());
@@ -70,6 +70,7 @@ public class Mainline {
 		System.out.print("Checking: ");
 		checking.printBalance();
 		System.out.println("");
+		
 		/*
 		 * PRO STEPS
 		 */
