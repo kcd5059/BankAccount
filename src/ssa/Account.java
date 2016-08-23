@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import ssa.Transaction.TranType;
+//import ssa.Transaction.TranType;
 
 public class Account {
 
@@ -15,7 +15,7 @@ public class Account {
 	private int id = rnd.nextInt(1000);
 	private String description;
 	private double balance = 0;
-	private List<Transaction> transactionHistory = new ArrayList<>();
+	//private List<Transaction> transactionHistory = new ArrayList<>();
 	
 	public Account() {
 	}
@@ -39,7 +39,7 @@ public class Account {
 			//No overdraft detected, perform withdrawal
 			balance -= withdrawalAmount;
 			//Create new Transaction and add to transactionHistory
-			transactionHistory.add(new Transaction(new Date(), TranType.WITHDRAWAL, -withdrawalAmount));
+			//transactionHistory.add(new Transaction(new Date(), TranType.WITHDRAWAL, -withdrawalAmount));
 		} else {
 			System.out.println("Insufficient funds!");
 		}
@@ -51,7 +51,7 @@ public class Account {
 		//Deposit amount
 		balance += depositAmount;
 		//Create new Transaction and add to transactionHistory
-		transactionHistory.add(new Transaction(new Date(), TranType.DEPOSIT, depositAmount));
+		//transactionHistory.add(new Transaction(new Date(), TranType.DEPOSIT, depositAmount));
 		return balance;
 	}
 	
@@ -73,8 +73,6 @@ public class Account {
 		this.description = description;
 	}
 
-	
-	
 	public int getId() {
 		return id;
 	}
@@ -96,12 +94,12 @@ public class Account {
 		return "Account " + id + " balance is " + df.format(balance);
 	}
 	
-	public void printTransactionHistory() {
-		System.out.println("Transaction History for Account: " + id + " '" + description + "'");
-		for (Transaction transaction : transactionHistory) {
-			transaction.print();
-		}
-	}
+//	public void printTransactionHistory() {
+//		System.out.println("Transaction History for Account: " + id + " '" + description + "'");
+//		for (Transaction transaction : transactionHistory) {
+//			transaction.print();
+//		}
+//	}
 	
 }
 
