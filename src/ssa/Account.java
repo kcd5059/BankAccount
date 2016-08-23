@@ -1,97 +1,68 @@
 package ssa;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import ssa.Transaction.TranType;
 
-import java.util.Date;
-
 public class Account {
 
 	Random rnd = new Random();
 	
-	private final int accountID = rnd.nextInt(1000);
+	private int id = rnd.nextInt(1000);
 	private String description;
-	private float balance = 0.0f;
+	private double balance = 0;
 	private List<Transaction> transactionHistory = new ArrayList<>();
 	
 	public Account() {
+	}
+	
+	public Account(double initialBalance) {
+		setBalance(initialBalance);
+	}
+	
+	public Account(String description) {
+		this.description = description;
+	}
+	
+	public Account(int id, String description) {
+		setId(id);
+		this.description = description;
+	}
 		
-	}
-	
-	public Account(float initialBalance) {
-		balance = initialBalance;
-	}
-	
-	public void printBalance() {
-		System.out.printf("The current balance is %.2f.\n", balance);
-	}
-	
-	public float withdraw(float withdrawalAmount) {
+	public double withdraw(double withdrawalAmount) {
 		//Check for and prevent overdraft
 		if ((balance - withdrawalAmount) >= 0) {
 			//No overdraft detected, perform withdrawal
 			balance -= withdrawalAmount;
 			//Create new Transaction and add to transactionHistory
-			Transaction transaction = new Transaction(new Date(), TranType.WITHDRAWAL, -withdrawalAmount);
-			transactionHistory.add(transaction);
-			System.out.printf("Withdrew %.2f. ", withdrawalAmount);
-			System.out.printf("Transaction ID: %d.\n", transaction.getTransactionID());
+			transactionHistory.add(new Transaction(new Date(), TranType.WITHDRAWAL, -withdrawalAmount));
 		} else {
 			System.out.println("Insufficient funds!");
-			printBalance();
 		}
 		
 		return balance;
 	}
 	
-	public float deposit(float depositAmount) {
+	public double deposit(double depositAmount) {
 		//Deposit amount
 		balance += depositAmount;
 		//Create new Transaction and add to transactionHistory
-		Transaction transaction = new Transaction(new Date(), TranType.DEPOSIT, depositAmount);
-		transactionHistory.add(transaction);
-		System.out.printf("Deposited %.2f. ", depositAmount);
-		System.out.printf("Transaction ID: %d.\n", transaction.getTransactionID());
+		transactionHistory.add(new Transaction(new Date(), TranType.DEPOSIT, depositAmount));
 		return balance;
 	}
 	
-	public Account transferTo(float transferAmount, Account destinationAccount) {
+	public void transferFrom(Account account, double amount) {
 		
-		//Check for and prevent overdraft
-		if ((balance - transferAmount) >= 0) {
-			//Withdraw from origin account
-			balance -= transferAmount;
-			//Create new Transaction and add to transactionHistory
-			Transaction transaction = new Transaction(new Date(), TranType.TRANSFER, -transferAmount);
-			System.out.printf("Transferred %.2f: ", transferAmount);
-			System.out.print(description + " -> " + destinationAccount.getDescription() + ", ");
-			System.out.printf("Transaction ID: %d.\n", transaction.getTransactionID());
-			//Set note for transaction
-			transaction.setNote("Transfer to AcctID: " + destinationAccount.accountID);
-			//Call transferFrom account to deposit amount into destinationAccount and log transfer
-			destinationAccount.transferFrom(transferAmount, accountID, transaction.getTransactionID());
-			transactionHistory.add(transaction);
-		} else {
-			System.out.println("Insufficient funds!");
-			printBalance();
+		double initialBalance = account.getBalance(); //initial balance of "from" account
+		account.withdraw(amount);
+		//Check if withdrawal was successful before depositing amount
+		if ( (initialBalance - amount) == account.getBalance() ) {
+			this.deposit(amount);
 		}
-		
-		return destinationAccount;
-	}
-	
-	private void transferFrom(float transferAmount, int originAccountID, int transactionID) {
-		//Deposit amount of transfer
-		balance += transferAmount;
-		//Create new Transaction and add to transactionHistory
-		Transaction transaction = new Transaction(new Date(), TranType.TRANSFER, transferAmount);
-		//Set transactionID to be the same as Transaction for origin account (for easier tracking)
-		transaction.setTransactionID(transactionID);
-		//Set note for transaction
-		transaction.setNote("Transfer From AcctID: " + originAccountID);
-		transactionHistory.add(transaction);
 	}
 
 	public String getDescription() {
@@ -102,24 +73,31 @@ public class Account {
 		this.description = description;
 	}
 
-	public int getAccountID() {
-		return accountID;
-	}
 	
-//	public void setAccountID(int accountID) {
-//		this.accountID = accountID;
-//	}
+	
+	public int getId() {
+		return id;
+	}
 
-	public float getBalance() {
+	private void setId(int id) {
+		this.id = id;
+	}
+
+	public double getBalance() {
 		return balance;
 	}
 	
-	public void setBalance(float balance) {
+	private void setBalance(double balance) {
 		this.balance = balance;
 	}
 	
+	public String print() {
+		DecimalFormat df = new DecimalFormat("0.00");
+		return "Account " + id + " balance is " + df.format(balance);
+	}
+	
 	public void printTransactionHistory() {
-		System.out.println("Transaction History for Account: " + accountID + " '" + description + "'");
+		System.out.println("Transaction History for Account: " + id + " '" + description + "'");
 		for (Transaction transaction : transactionHistory) {
 			transaction.print();
 		}

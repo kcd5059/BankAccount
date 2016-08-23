@@ -9,13 +9,13 @@ public class Transaction {
 
 	private final Random rnd = new Random();
 
-	int transactionID = rnd.nextInt(1000000);
-	final Date date;
-	final TranType type;
-	float balanceChange = 0f;
-	String note = "";
+	private int transactionID = rnd.nextInt(1000000);
+	private Date date;
+	private TranType type;
+	private double balanceChange = 0f;
+	private String note = "";
 
-	public Transaction(Date date, TranType type, float balanceChange) {
+	public Transaction(Date date, TranType type, double balanceChange) {
 		this.date = date;
 		this.type = type;
 		this.balanceChange = balanceChange;
@@ -44,7 +44,7 @@ public class Transaction {
 	public void print() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss z");
 		String formattedDate = sdf.format(date);
-		DecimalFormat df = new DecimalFormat("#.00");
+		DecimalFormat df = new DecimalFormat("0.00");
 		
 		//Add leading zeroes to transaction ID to create consistency in output format
 		String formattedID = transactionID + "";
@@ -68,45 +68,4 @@ public class Transaction {
 		}
 
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Float.floatToIntBits(balanceChange);
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + ((note == null) ? 0 : note.hashCode());
-		result = prime * result + transactionID;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Transaction other = (Transaction) obj;
-		if (Float.floatToIntBits(balanceChange) != Float.floatToIntBits(other.balanceChange))
-			return false;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
-		if (note == null) {
-			if (other.note != null)
-				return false;
-		} else if (!note.equals(other.note))
-			return false;
-		if (transactionID != other.transactionID)
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
-
 }
