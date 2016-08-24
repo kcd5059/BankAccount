@@ -91,7 +91,7 @@ public class Account {
 	
 	public String print() {
 		DecimalFormat df = new DecimalFormat("0.00");
-		return "Account " + id + " balance is " + df.format(balance);
+		return "Account " + id + " balance is $" + df.format(balance);
 	}
 	
 //	public void printTransactionHistory() {
