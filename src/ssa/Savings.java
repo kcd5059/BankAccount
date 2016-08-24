@@ -14,7 +14,7 @@ public class Savings extends Account {
 	public double calcDepositInterest(int months) {
 
 		// Calculate total interest rate for desired months
-		double totalInterest = (getInterestRate() / 12) * months;
+		double totalInterest = (this.getInterestRate() / 12) * months;
 		// Calculate total amount to be deposited
 		double accruedInterest = totalInterest * this.getBalance();
 		// Use Account.deposit method to deposit amount into the account
