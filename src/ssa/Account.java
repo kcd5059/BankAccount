@@ -1,9 +1,9 @@
 package ssa;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.Date;
+//import java.util.List;
 import java.util.Random;
 
 //import ssa.Transaction.TranType;
@@ -35,24 +35,27 @@ public class Account {
 		
 	public double withdraw(double withdrawalAmount) {
 		//Check for and prevent overdraft
-		if ((balance - withdrawalAmount) >= 0) {
+		if ((this.getBalance() - withdrawalAmount) >= 0) {
 			//No overdraft detected, perform withdrawal
-			balance -= withdrawalAmount;
+			this.setBalance(this.getBalance() - withdrawalAmount); 
 			//Create new Transaction and add to transactionHistory
 			//transactionHistory.add(new Transaction(new Date(), TranType.WITHDRAWAL, -withdrawalAmount));
 		} else {
 			System.out.println("Insufficient funds!");
 		}
 		
-		return balance;
+		return this.getBalance();
 	}
 	
 	public double deposit(double depositAmount) {
-		//Deposit amount
-		balance += depositAmount;
+		//Prevent negative numbers being deposited
+		if (depositAmount > 0) {
+			//Deposit amount
+			this.setBalance(getBalance() + depositAmount);
+		}
 		//Create new Transaction and add to transactionHistory
 		//transactionHistory.add(new Transaction(new Date(), TranType.DEPOSIT, depositAmount));
-		return balance;
+		return this.getBalance();
 	}
 	
 	public void transferFrom(Account account, double amount) {
@@ -86,12 +89,15 @@ public class Account {
 	}
 	
 	private void setBalance(double balance) {
-		this.balance = balance;
+		
+		if (balance >= 0) {
+			this.balance = balance;
+		}
 	}
 	
 	public String print() {
 		DecimalFormat df = new DecimalFormat("0.00");
-		return "Account " + id + " balance is $" + df.format(balance);
+		return "Account " + id + " balance is $" + df.format(this.getBalance());
 	}
 	
 //	public void printTransactionHistory() {
